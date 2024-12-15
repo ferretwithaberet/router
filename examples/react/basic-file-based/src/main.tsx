@@ -1,11 +1,19 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { RouterProvider, createRouter } from '@tanstack/react-router'
+import {
+  RouterProvider,
+  createBrowserHistory,
+  createRouter,
+} from '@tanstack/react-router'
+import { wrapHistoryWithRecordAddon } from '@tanstack/record-history-addon'
 import { routeTree } from './routeTree.gen'
+
+const history = wrapHistoryWithRecordAddon(createBrowserHistory())
 
 // Set up a Router instance
 const router = createRouter({
   routeTree,
+  history,
   defaultPreload: 'intent',
   defaultStaleTime: 5000,
 })

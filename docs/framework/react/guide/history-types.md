@@ -53,3 +53,46 @@ const router = createRouter({ routeTree, history: memoryHistory })
 ```
 
 Refer to the [SSR Guide](./ssr.md#server-history) for usage on the server for server-side rendering.
+
+## Recording history state
+
+An addon is provided for recording the history state.
+
+```ts
+import { createBrowserHistory, createRouter } from '@tanstack/react-router'
+import { wrapHistoryWithRecordAddon } from '@tanstack/record-history-addon'
+
+const browserHistory = createBrowserHistory()
+
+const router = createRouter({
+  routeTree,
+  history: wrapHistoryWithRecordAddon(browserHistory),
+})
+```
+
+The history state can then be read through `getRecordedHistory` or `useRecordedHistory`.
+
+```tsx
+import { createFileRoute, useRouter } from "@tanstack/react-router"
+import { useRecordedHistory } from "@tanstack/record-history-addon"
+
+export const Route = createFileRoute("/")({
+  component: RouteComponent,
+})
+
+function RouteComponent() {
+  const router = useRouter()
+  const recordedHistory = useRecordedHistory()
+  const canGoBack = recordedHistory.cursor > 0
+
+  return (
+    <>
+      {canGoBack ? (
+        <button onClick={() => router.history.back()}>Go back</button>
+      ) : null}
+
+      <div>Content</div>
+    </>
+  )
+}
+```
